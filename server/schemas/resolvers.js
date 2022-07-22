@@ -22,7 +22,6 @@ const resolvers = {
         addUser: async (parent, args) => {
             const user = await User.create(args);
             const token = signToken(user);
-            console.log(user);
             return { token, user };
         },
         login: async (parent, { email, password }) => {
@@ -41,30 +40,32 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
-        saveBook: async (parent, {userId, book}) => {
-            if (userId) {
+        saveBook: async (parent, { book }, context) => {
+            if (context.user) {
 
                 const updatedUser = await User.findByIdAndUpdate(
-                    { _id: userId },
+                    { _id: context.user._id },
                     { $push: { savedBooks: book } },
                     { new: true }
                 );
-                console.log(updatedUser);
 
                 return updatedUser;
             }
+
+            throw new AuthenticationError('Incorrect credentials');
         },
-        removeBook: async (parent, {userId, bookId}) => {
-            if (userId) {
+        removeBook: async (parent, { bookId }, context) => {
+            if (context.user) {
                 const updatedUser = await User.findByIdAndUpdate(
-                    { _id: userId },
+                    { _id: context.user._id },
                     { $pull: { savedBooks: { bookId } } },
                     { new: true }
                 );
-                console.log(updatedUser);
 
                 return updatedUser;
             }
+
+            throw new AuthenticationError('Incorrect credentials');
         }
     }
 };
