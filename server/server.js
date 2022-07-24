@@ -1,3 +1,6 @@
+const path = require('path')
+const fs = require('fs');
+
 const express = require('express');
 
 const { typeDefs, resolvers } = require('./schemas');
@@ -20,12 +23,28 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const clientPath = path.resolve('../client/build');
+if (fs.existsSync(clientPath)) {
+
+  app.use(express.static(clientPath));
+
+  app.get('/', function (req, res) {
+    res.sendFile(path.join(clientPath, 'index.html'));
+  });
+
+  app.get('/saved', function (req, res) {
+    res.sendFile(path.join(clientPath, 'index.html'));
+  });
+}
+
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   // integrate our Apollo server with the Express application as middleware
   server.applyMiddleware({ app });
 
   db.once('open', () => {
+
+
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
