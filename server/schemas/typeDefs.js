@@ -30,13 +30,14 @@ input BookInput {
   }
 
   type Auth {
-    token: ID!
+    token: ID
     user: User
   }
 
   type Query {
-    me: User
-    Users: [User]
+    me: User 
+    user: User
+    users: [User]
   }
 
   type Mutation {
