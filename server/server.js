@@ -23,9 +23,19 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+const consoleLogger = (req, res, next) => {
+  let method = req.method;
+  let url = req.url;
+  let status = res.statusCode;
+  let log = `${method}:${url} ${status}`;
+  console.log(log);
+  next();
+};
+app.use(consoleLogger);
+
 const clientPath = path.resolve('../client/build');
 if (fs.existsSync(clientPath)) {
-
+  console.log("Located client app files")
   app.use(express.static(clientPath));
 /*
   app.get('/', function (req, res) {
