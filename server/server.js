@@ -27,7 +27,7 @@ const clientPath = path.resolve('../client/build');
 if (fs.existsSync(clientPath)) {
 
   app.use(express.static(clientPath));
-
+/*
   app.get('/', function (req, res) {
     res.sendFile(path.join(clientPath, 'index.html'));
   });
@@ -35,6 +35,7 @@ if (fs.existsSync(clientPath)) {
   app.get('/saved', function (req, res) {
     res.sendFile(path.join(clientPath, 'index.html'));
   });
+*/
 }
 
 const startApolloServer = async (typeDefs, resolvers) => {
